@@ -1,0 +1,14 @@
+***question number 1 ***
+In what sport did Michael Jordan play?
+
+***the answers***
+1)basketball, isTrue=true
+
+***question number 2 ***
+What sports are there in the Olympics?
+
+***the answers***
+1)Cricket, isTrue=false
+2)Ski Jumps, isTrue=true
+3)No True Answers , isTrue=false
+

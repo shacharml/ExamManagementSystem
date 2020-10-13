@@ -1,0 +1,16 @@
+***question number 1 ***
+In what sport did Michael Jordan play?
+
+***the answers***
+1)basketball, isTrue=true
+
+***question number 2 ***
+Who is the Olympic swimmer with the most medals?
+
+***the answers***
+1)Ian James Thorpe, isTrue=false
+2)Chase Tyler Kalisz, isTrue=false
+3)Michael Fred Phelps, isTrue=true
+4)Michael "Mike" Ray Barrowman, isTrue=false
+5)No True Answers , isTrue=false
+

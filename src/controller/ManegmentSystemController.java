@@ -2,6 +2,8 @@ package controller;
 
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+
 import MyExceptions.AnswerDontExists;
 import MyExceptions.MoreQuestionsThenExist;
 import MyExceptions.QuestionDontExists;
@@ -76,8 +78,8 @@ public class ManegmentSystemController implements SystemUIEventListener, SystemE
 	}
 
 	@Override
-	public void createAnExamManualyModelEvent(AdminSystem adminSystem) throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists {
-		systemView.createAnExamManualy(adminSystem);
+	public void createAnExamManualyModelEvent() throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists {
+		systemView.createAnExamManualy();
 		
 	}
 
@@ -128,8 +130,8 @@ public class ManegmentSystemController implements SystemUIEventListener, SystemE
 	}
 
 	@Override
-	public void createAnExamManualyToUI() throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists {
-		adminSystem.createAnExamManualy();
+	public void createAnExamManualyToUI(ArrayList<Integer> qnum) throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists {
+		adminSystem.createAnExamManualy(qnum);
 		
 	}
 

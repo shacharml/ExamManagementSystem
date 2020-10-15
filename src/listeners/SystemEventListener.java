@@ -1,13 +1,9 @@
 package listeners;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
 import MyExceptions.AnswerDontExists;
 import MyExceptions.MoreQuestionsThenExist;
-import model.AdminSystem;
-import model.Question;
+
 
 public interface SystemEventListener {
 	
@@ -29,11 +25,7 @@ public interface SystemEventListener {
 
 	void deleteAnswerModelEvent();
 
-	void createAnExamManualyModelEvent(AdminSystem adminSystem) throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists;
+	void createAnExamManualyModelEvent() throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists;
 
 	void creatAnExamAutomaticModelEvent(String autoExam) throws MoreQuestionsThenExist, FileNotFoundException;
-
-	
-
-
 }

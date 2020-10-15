@@ -15,7 +15,7 @@ import listeners.SystemEventListener;
 
 
 
-public class AdminSystem {// implements manageable {
+public class AdminSystem {
 
 	final String OPEN_QUESTION = "openQuestions.txt";
 	final String QUESTION_AND_ANSWERS = "QuestionAndAnswer.txt";
@@ -312,12 +312,22 @@ public class AdminSystem {// implements manageable {
 		
 	}
 
-	public void createAnExamManualy() throws MoreQuestionsThenExist, FileNotFoundException, AnswerDontExists {
+	public void createAnExamManualy(ArrayList<Integer> qnum) throws MoreQuestionsThenExist, FileNotFoundException, AnswerDontExists {
+
+		ManualExam manualEx = new ManualExam(qnum.size());
+		
+		for (int i = 0; i <qnum.size(); i++) {
+			
+			manualEx.addQuestion(questions.get(qnum.get(i)).getQuestion());
+			
+		}
+		
+		manualEx.saveExam("M");
 		
 		
 		
 		
-		fireCreateExamManuallyEvent(this);
+		fireCreateExamManuallyEvent();
 		
 		
 		
@@ -336,26 +346,16 @@ public class AdminSystem {// implements manageable {
 		*/
 		
 	}
-	
 
-	
-	
-	
-	private void fireCreateExamManuallyEvent(AdminSystem as) throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists {
+	private void fireCreateExamManuallyEvent() throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists {
 		
 		for (SystemEventListener l : listeners) {
-			l.createAnExamManualyModelEvent(as);;
+			l.createAnExamManualyModelEvent();;
 		}
 	}
 
 	public void registerListener(SystemEventListener listenerControoler) {
 		
 		listeners.add(listenerControoler);
-	}
-
-	
-	
-	
-
-	
+	}	
 }

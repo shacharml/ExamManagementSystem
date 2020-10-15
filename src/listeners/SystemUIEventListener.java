@@ -1,6 +1,7 @@
 package listeners;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import MyExceptions.AnswerDontExists;
 import MyExceptions.MoreQuestionsThenExist;
@@ -27,9 +28,7 @@ public interface SystemUIEventListener {
 
 	void deleteAnswerToUI(int indexQ, int indexA) throws QuestionDontExists, AnswerDontExists;
 
-	void createAnExamManualyToUI() throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists;
+	void createAnExamManualyToUI(ArrayList<Integer> qnum) throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists;
 
 	void creatAnExamAutomaticToUI(int numOfQ) throws MoreQuestionsThenExist, FileNotFoundException;
-
-
 }

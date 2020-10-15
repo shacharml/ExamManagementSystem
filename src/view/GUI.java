@@ -1,6 +1,9 @@
 package view;
 
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import MyExceptions.AnswerDontExists;
@@ -27,10 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import listeners.SystemUIEventListener;
-import model.AdminSystem;
 import model.Exam;
-import model.ManualExam;
-
 
 public class GUI implements manageable {
 
@@ -38,8 +38,8 @@ public class GUI implements manageable {
 	private Stage qandaStage = new Stage();
 	private Label questionAndAnswersLabel = new Label();
 	private Button btnPrintAllQandA = new Button("print all question and answers");
-    private Exam manExam ;
-	
+	//private Exam manExam;
+
 	public GUI(Stage theStage) throws FileNotFoundException {
 
 		theStage.setTitle("-- Mainu --");
@@ -396,12 +396,54 @@ public class GUI implements manageable {
 			@Override
 			public void handle(ActionEvent arg0) {
 
-				for (SystemUIEventListener l : allListeners)
-					try {
-						l.createAnExamManualyToUI();
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(null, e.getMessage());
+				Stage creatExamManStage = new Stage();
+				creatExamManStage.setTitle("Creat exam manually : ");
+
+				GridPane gpCreatExam = new GridPane();
+				gpCreatExam.setPadding(new Insets(10));
+				gpCreatExam.setHgap(10);
+				gpCreatExam.setVgap(10);
+
+				Label lbIndexesQ = new Label();
+				lbIndexesQ.setText("Enter the questions indexes you want in the exam (1,5,7,) :");
+				TextField tfIndexesQ = new TextField();
+				tfIndexesQ.setMaxWidth(100);
+
+				Button btnCreate = new Button("create");
+				btnCreate.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+
+						ArrayList<String> QStringNum = new ArrayList<String>(
+								Arrays.asList(tfIndexesQ.getText().split(",")));
+
+						ArrayList<Integer> Qnum = new ArrayList<Integer>();
+
+						for (int i = 0; i < QStringNum.size(); i++) {
+							Qnum.add(Integer.parseInt(QStringNum.get(i)));
+
+						}
+
+						for (SystemUIEventListener l : allListeners)
+							try {
+								creatExamManStage.close();
+								l.createAnExamManualyToUI(Qnum);
+								
+							} catch (Exception e) {
+								JOptionPane.showMessageDialog(null, e.getMessage());
+							}
+
 					}
+				});
+				;
+
+				gpCreatExam.add(lbIndexesQ, 1, 0);
+				gpCreatExam.add(tfIndexesQ, 2, 0);
+				gpCreatExam.add(btnCreate, 2, 1);
+
+				creatExamManStage.setScene(new Scene(gpCreatExam));
+				creatExamManStage.show();
 
 			}
 		});
@@ -452,7 +494,7 @@ public class GUI implements manageable {
 				rdoUpdateAnswer, rdoDeleteAnsFronQ, rdoDeleteQuestion, rdoCreatManuualyExam, rdoCreatAutomaticExam,
 				btnCloseAndSave);
 
-		// vbRoot.setAlignment(Pos.CENTER_LEFT);
+		
 		vbRoot.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, null, null)));
 		theStage.setScene(new Scene(vbRoot, 400, 350));
 		theStage.show();
@@ -528,111 +570,91 @@ public class GUI implements manageable {
 	}
 
 	@Override
-	public void createAnExamManualy(AdminSystem adminSystem)
-			throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists {
+	public void createAnExamManualy() throws FileNotFoundException, MoreQuestionsThenExist, AnswerDontExists {
 
-
-		Stage creatExamManStage = new Stage();
-		creatExamManStage.setTitle("Creat exam manually : ");
-
-		GridPane gpCreatExam = new GridPane();
-		gpCreatExam.setPadding(new Insets(10));
-		gpCreatExam.setHgap(10);
-		gpCreatExam.setVgap(10);
-
-		Label lbHowManyQ = new Label();
-		lbHowManyQ.setText("Choose how many question in the exam :");
-		TextField tfHowManyQ = new TextField();
-		
-
-		Label lbHowManyOpenQ = new Label();
-		lbHowManyOpenQ.setText("Choose how many from them open question in the exam :");
-		TextField tfHowManyOpenQ = new TextField();
-
-		
-
-		Button btnChoose = new Button("Choose !");
-
-		
-		gpCreatExam.add(lbHowManyQ, 1, 0);
-		gpCreatExam.add(tfHowManyQ, 2, 0);
-		gpCreatExam.add(lbHowManyOpenQ, 1, 1);
-		gpCreatExam.add(tfHowManyOpenQ, 2, 1);
-		//gpCreatExam.add(lbChoosQ, 1, 2);
-		//gpCreatExam.add(tfQIndex, 2, 2);
-		gpCreatExam.add(btnChoose, 2, 3);
-
-		creatExamManStage.setScene(new Scene(gpCreatExam));
-		creatExamManStage.show();
-
-	
-
-		btnChoose.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-               
-				
-				manExam= new ManualExam(Integer.parseInt(tfHowManyQ.getText()));
-				
-
-				Label lbChoosQ = new Label();
-				lbChoosQ.setText("Choose the question index you want to Add to the exam :");
-				TextField tfQIndex = new TextField();
-				
-				Stage chooseAnsStage = new Stage();
-				chooseAnsStage.setTitle("Choose answers to this Question : ");
-
-				GridPane gpAns = new GridPane();
-
-				Label lbChoosA = new Label();
-				lbChoosA.setText("Choose the Answer index you want to Add to this Question :");
-				TextField tfAIndex = new TextField();
-
-				ComboBox<Boolean> cmTF = new ComboBox<Boolean>();
-				cmTF.setPromptText("you want to choose another answers? T/F :");
-				cmTF.getItems().addAll(true, false);
-
-				Button btnSend = new Button("send !");
-
-				gpCreatExam.add(lbChoosQ, 1, 0);
-				gpCreatExam.add(tfQIndex, 2, 0);
-				gpAns.add(lbChoosA, 1, 1);
-				gpAns.add(tfAIndex, 2, 1);
-				gpAns.add(cmTF, 1, 3);
-				gpAns.add(btnSend, 2, 4);
-
-				chooseAnsStage.setScene(new Scene(gpAns));
-				chooseAnsStage.show();
-				creatExamManStage.close();
-				
-				btnSend.setOnAction(new EventHandler<ActionEvent>() {
-
-					@Override
-					public void handle(ActionEvent arg0) {
-
-						
-						if (!cmTF.getValue()) {
-							chooseAnsStage.close();
-						} else {
-							chooseAnsStage.close();
-							btnChoose.fire();
-
-						}
-					}
-
-				});
-
-			}
-		});
-
+		JOptionPane.showMessageDialog(null, "The exam were created");
 	}
 
-	private boolean handelerExam(int parseInt, AdminSystem adminSystem) {
-		return false;
-		
-		
-	}
+	/*
+	 * Stage creatExamManStage = new Stage();
+	 * creatExamManStage.setTitle("Creat exam manually : ");
+	 * 
+	 * GridPane gpCreatExam = new GridPane(); gpCreatExam.setPadding(new
+	 * Insets(10)); gpCreatExam.setHgap(10); gpCreatExam.setVgap(10);
+	 * 
+	 * Label lbHowManyQ = new Label();
+	 * lbHowManyQ.setText("Choose how many question in the exam :"); TextField
+	 * tfHowManyQ = new TextField();
+	 * 
+	 * 
+	 * Label lbHowManyOpenQ = new Label(); lbHowManyOpenQ.
+	 * setText("Choose how many from them open question in the exam :"); TextField
+	 * tfHowManyOpenQ = new TextField();
+	 * 
+	 * 
+	 * 
+	 * Button btnChoose = new Button("Choose !");
+	 * 
+	 * 
+	 * gpCreatExam.add(lbHowManyQ, 1, 0); gpCreatExam.add(tfHowManyQ, 2, 0);
+	 * gpCreatExam.add(lbHowManyOpenQ, 1, 1); gpCreatExam.add(tfHowManyOpenQ, 2, 1);
+	 * //gpCreatExam.add(lbChoosQ, 1, 2); //gpCreatExam.add(tfQIndex, 2, 2);
+	 * gpCreatExam.add(btnChoose, 2, 3);
+	 * 
+	 * creatExamManStage.setScene(new Scene(gpCreatExam)); creatExamManStage.show();
+	 * 
+	 * 
+	 * 
+	 * btnChoose.setOnAction(new EventHandler<ActionEvent>() {
+	 * 
+	 * @Override public void handle(ActionEvent arg0) {
+	 * 
+	 * 
+	 * manExam= new ManualExam(Integer.parseInt(tfHowManyQ.getText()));
+	 * 
+	 * 
+	 * Label lbChoosQ = new Label();
+	 * lbChoosQ.setText("Choose the question index you want to Add to the exam :");
+	 * TextField tfQIndex = new TextField();
+	 * 
+	 * Stage chooseAnsStage = new Stage();
+	 * chooseAnsStage.setTitle("Choose answers to this Question : ");
+	 * 
+	 * GridPane gpAns = new GridPane();
+	 * 
+	 * Label lbChoosA = new Label();
+	 * lbChoosA.setText("Choose the Answer index you want to Add to this Question :"
+	 * ); TextField tfAIndex = new TextField();
+	 * 
+	 * ComboBox<Boolean> cmTF = new ComboBox<Boolean>();
+	 * cmTF.setPromptText("you want to choose another answers? T/F :");
+	 * cmTF.getItems().addAll(true, false);
+	 * 
+	 * Button btnSend = new Button("send !");
+	 * 
+	 * gpCreatExam.add(lbChoosQ, 1, 0); gpCreatExam.add(tfQIndex, 2, 0);
+	 * gpAns.add(lbChoosA, 1, 1); gpAns.add(tfAIndex, 2, 1); gpAns.add(cmTF, 1, 3);
+	 * gpAns.add(btnSend, 2, 4);
+	 * 
+	 * chooseAnsStage.setScene(new Scene(gpAns)); chooseAnsStage.show();
+	 * creatExamManStage.close();
+	 * 
+	 * btnSend.setOnAction(new EventHandler<ActionEvent>() {
+	 * 
+	 * @Override public void handle(ActionEvent arg0) {
+	 * 
+	 * 
+	 * if (!cmTF.getValue()) { chooseAnsStage.close(); } else {
+	 * chooseAnsStage.close(); btnChoose.fire();
+	 * 
+	 * } }
+	 * 
+	 * });
+	 * 
+	 * } });
+	 * 
+	 * }
+	 */
 
 	@Override
 	public void creatAnExamAutomatic(String autoExam) throws MoreQuestionsThenExist, FileNotFoundException {
@@ -658,5 +680,4 @@ public class GUI implements manageable {
 		this.allListeners.add(manegmentSystemController);
 
 	}
-
 }
